@@ -1,160 +1,97 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using ForumApi.DataAccess;
-using ForumApi.Models;
 
 namespace ForumApi.Controllers
 {
     public class AnswersController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IAnswerRepository _answerRepository;
 
-        public AnswersController(DataContext context)
+        public AnswersController(IAnswerRepository answerRepository)
         {
-            _context = context;
+            _answerRepository = answerRepository;
         }
 
-        // GET: Answers
         public async Task<IActionResult> Index()
         {
-            var dataContext = _context.Answer.Include(a => a.Post);
-            return View(await dataContext.ToListAsync());
+            return View(await _answerRepository.GetAllAsyn());
         }
 
-        // GET: Answers/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var answer = await _context.Answer
-                .Include(a => a.Post)
-                .SingleOrDefaultAsync(m => m.AnswerId == id);
-            if (answer == null)
-            {
-                return NotFound();
-            }
-
-            return View(answer);
-        }
-
-        // GET: Answers/Create
         public IActionResult Create()
         {
-            ViewData["PostId"] = new SelectList(_context.Post, "PostId", "PostId");
             return View();
         }
 
-        // POST: Answers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        public IActionResult Details(int id)
+        {
+            var answerDetail = _answerRepository.Find(b => b.AnswerId == id);
+            return View(answerDetail);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AnswerId,PostId,AnswerContent,TimeStamp,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn")] Answer answer)
+        public async Task<IActionResult> Create([Bind("AnswerBody,PostId")]Models.Answer answer)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(answer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                await _answerRepository.AddAsyn(answer);
+                await _answerRepository.SaveAsync();
+                return RedirectToAction("Index");
             }
-            ViewData["PostId"] = new SelectList(_context.Post, "PostId", "PostId", answer.PostId);
             return View(answer);
         }
 
-        // GET: Answers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
-                return NotFound();
-            }
+                return RedirectToAction("Index");
 
-            var answer = await _context.Answer.SingleOrDefaultAsync(m => m.AnswerId == id);
-            if (answer == null)
-            {
-                return NotFound();
-            }
-            ViewData["PostId"] = new SelectList(_context.Post, "PostId", "PostId", answer.PostId);
+            Models.Answer answer = _answerRepository.Get((int)id);
             return View(answer);
+
         }
 
-        // POST: Answers/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AnswerId,PostId,AnswerContent,TimeStamp,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn")] Answer answer)
+        public ActionResult Edit([Bind("AnswerId,CreatedBy,CreatedOn,AnswerBody,UpdatedBy,UpdatedOn")]Models.Answer answer)
         {
-            if (id != answer.AnswerId)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(answer);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AnswerExists(answer.AnswerId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _answerRepository.Update(answer, answer.AnswerId);
+                return RedirectToAction("Index");
             }
-            ViewData["PostId"] = new SelectList(_context.Post, "PostId", "PostId", answer.PostId);
             return View(answer);
         }
 
-        // GET: Answers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction("Index");
             }
 
-            var answer = await _context.Answer
-                .Include(a => a.Post)
-                .SingleOrDefaultAsync(m => m.AnswerId == id);
+            Models.Answer answer = _answerRepository.Get((int)id);
             if (answer == null)
             {
-                return NotFound();
+                return RedirectToAction("Index");
             }
-
             return View(answer);
         }
 
-        // POST: Answers/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
         {
-            var answer = await _context.Answer.SingleOrDefaultAsync(m => m.AnswerId == id);
-            _context.Answer.Remove(answer);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            Models.Answer answer = _answerRepository.Get(id);
+            _answerRepository.Delete(answer);
+            return RedirectToAction("Index");
         }
 
-        private bool AnswerExists(int id)
+        protected override void Dispose(bool disposing)
         {
-            return _context.Answer.Any(e => e.AnswerId == id);
+            _answerRepository.Dispose();
+            base.Dispose(disposing);
         }
     }
 }
+
+

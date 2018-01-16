@@ -74,5 +74,6 @@ namespace ForumApi.DataAccess
     public DbSet<Post> Post { get; set; }
     public DbSet<PostDetail> PostDetail { get; set; }
     public DbSet<Answer> Answer { get; set; }
+    public DbSet<AnswerDetail> AnswerDetail { get; set; }
     }
 }

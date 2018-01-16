@@ -10,7 +10,6 @@ namespace ForumApi.Models
         public int AnswerId { get; set; }
         public int PostId { get; set; }
         public string AnswerContent { get; set; }
-        public DateTime TimeStamp { get; set; }
         public Post Post { get; set; }
         public User User { get; set; }
         public ICollection<Vote> Votes { get; set; }

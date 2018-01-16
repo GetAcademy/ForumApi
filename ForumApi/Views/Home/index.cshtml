@@ -22,9 +22,17 @@
             updatedOn: ""
         }
 
-        // Get all posts to display
+        var Answer = {
+            postId: 0,
+            answerId: 0,
+            answerContent: "",
+            createdBy: "",
+            createdOn: "",
+            updatedBy: "",
+            updatedOn: ""
+        }
+
         function getPostList() {
-            // Call Web API to get a list of posts
             $.ajax({
                 url: '/api/GetPosts/',
                 type: 'GET',
@@ -38,29 +46,21 @@
             });
         }
 
-        // Display all posts returned from Web API call
         function postListSuccess(posts) {
-            // Iterate over the collection of data
             $("#postTable tbody").remove();
             $.each(posts, function (index, post) {
-                // Add a row to the post table
                 postAddRow(post);
             });
         }
 
-        // Add post row to <table>
         function postAddRow(post) {
-            // First check if a <tbody> tag exists, add one if not
             if ($("#postTable tbody").length == 0) {
                 $("#postTable").append("<tbody></tbody>");
             }
-
-            // Append row to <table>
             $("#postTable tbody").append(
                 postBuildTableRow(post));
         }
 
-        // Build a <tr> for a row of table data
         function postBuildTableRow(post) {
             var newRow = "<tr>" +
                 "<td>" + post.postId + "</td>" +
@@ -75,9 +75,6 @@
                 "onclick='postUpdate(this);' " +
                 "class='btn btn-default' " +
                 "data-id='" + post.postId + "' " +
-                //"data-name='" + post.name + "' " +
-                //"data-gender='" + post.gender + "' " +
-                //"data-salary='" + post.salary + "' " +
                 ">" +
                 "<span class='glyphicon glyphicon-edit' /> Update" +
                 "</button> " +
@@ -101,8 +98,6 @@
             var obj = Post;
             obj.postTitle = $("#postTitle").val();
             obj.postContent = $("#postContent").val();
-            //obj.gender = $("#gender").val();
-            //obj.salary = $("#salary").val();
             console.log('in onAddPost');
             console.dir(obj);
             options.data = JSON.stringify(obj);
@@ -131,8 +126,6 @@
             obj.postId = id;
             obj.postTitle = $(".input-postTitle", $(item).parent().parent()).val();
             obj.postContent = $(".input-postContent", $(item).parent().parent()).val();
-            //obj.gender = $(".input-gender", $(item).parent().parent()).val();
-            //obj.salary = $(".input-salary", $(item).parent().parent()).val();
             console.log("postUpdate id: " + id);
             console.dir(obj);
             options.data = JSON.stringify(obj);
@@ -165,7 +158,6 @@
             $.ajax(options);
         }
 
-        // Handle exceptions from AJAX calls
         function handleException(request, message, error) {
             var msg = "";
             msg += "Code: " + request.status + "\n";
@@ -191,6 +183,7 @@
                     <td> CreatedOn </td>
                     <td> UpdatedBy </td>
                     <td> UpdatedOn </td>
+                    <td> Answers</td>
                     <td> </td>
                 </tr>
                 <tr>
@@ -201,7 +194,8 @@
                     <td> </td>
                     <td> </td>
                     <td> </td>
-                    <td> </td>
+                <td> </td>
+                <td></td>
             </thead>
         </table>
         <br />

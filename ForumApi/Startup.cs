@@ -23,6 +23,7 @@ namespace ForumApi
             services.AddDbContext<DataContext>(options =>
                 options.UseInMemoryDatabase());
             services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<IAnswerRepository, AnswerRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

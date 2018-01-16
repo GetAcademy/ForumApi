@@ -12,15 +12,21 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.AnswerContent)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TimeStamp)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreatedBy)
-                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AnswerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AnswerContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedBy)
+            </th>
                 <th>
                     @Html.DisplayNameFor(model => model.CreatedOn)
                 </th>
@@ -30,9 +36,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.UpdatedOn)
                 </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Post)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -40,10 +43,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.AnswerContent)
+                @Html.DisplayFor(modelItem => item.AnswerId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TimeStamp)
+                @Html.DisplayFor(modelItem => item.PostId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Post)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnswerContent)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedBy)
@@ -58,9 +67,7 @@
                 @Html.DisplayFor(modelItem => item.UpdatedOn)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Post.PostId)
-            </td>
-            <td>
+
                 <a asp-action="Edit" asp-route-id="@item.AnswerId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.AnswerId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.AnswerId">Delete</a>

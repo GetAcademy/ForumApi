@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ForumApi.DataAccess;
 
@@ -31,7 +32,7 @@ namespace ForumApi.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AnswerBody,PostId")]Models.Answer answer)
+        public async Task<IActionResult> Create([Bind("AnswerContent,PostId")]Models.Answer answer)
         {
             if (ModelState.IsValid)
             {
@@ -53,7 +54,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit([Bind("AnswerId,CreatedBy,CreatedOn,AnswerBody,UpdatedBy,UpdatedOn")]Models.Answer answer)
+        public ActionResult Edit([Bind("AnswerId,CreatedBy,CreatedOn,AnswerContent,UpdatedBy,UpdatedOn")]Models.Answer answer)
         {
             if (ModelState.IsValid)
             {

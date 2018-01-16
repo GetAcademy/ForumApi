@@ -39,7 +39,6 @@ namespace ForumApi.DataAccess
 
         public virtual T Add(T t)
         {
-
             _context.Set<T>().Add(t);
             _context.SaveChanges();
             return t;

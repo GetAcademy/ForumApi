@@ -1,0 +1,211 @@
+﻿<html>
+<head>
+    <title>SmartIT Post Manager</title>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            getPostList();
+        });
+
+        var Post = {
+            postId: 0,
+            postTitle: "",
+            postContent: "",
+            createdBy: "",
+            createdOn: "",
+            updatedBy: "",
+            updatedOn: ""
+        }
+
+        // Get all posts to display
+        function getPostList() {
+            // Call Web API to get a list of posts
+            $.ajax({
+                url: '/api/GetPosts/',
+                type: 'GET',
+                dataType: 'json',
+                success: function (posts) {
+                    postListSuccess(posts);
+                },
+                error: function (request, message, error) {
+                    handleException(request, message, error);
+                }
+            });
+        }
+
+        // Display all posts returned from Web API call
+        function postListSuccess(posts) {
+            // Iterate over the collection of data
+            $("#postTable tbody").remove();
+            $.each(posts, function (index, post) {
+                // Add a row to the post table
+                postAddRow(post);
+            });
+        }
+
+        // Add post row to <table>
+        function postAddRow(post) {
+            // First check if a <tbody> tag exists, add one if not
+            if ($("#postTable tbody").length == 0) {
+                $("#postTable").append("<tbody></tbody>");
+            }
+
+            // Append row to <table>
+            $("#postTable tbody").append(
+                postBuildTableRow(post));
+        }
+
+        // Build a <tr> for a row of table data
+        function postBuildTableRow(post) {
+            var newRow = "<tr>" +
+                "<td>" + post.postId + "</td>" +
+                "<td><input   class='input-postTitle' type='text' value='" + post.postTitle + "'/></td>" +
+                "<td><input   class='input-postContent' type='text' value='" + post.postContent + "'/></td>" +
+                "<td><label   >" + post.createdBy + "</label></td>" +
+                "<td><label   >" + post.createdOn + "</label></td>" +
+                "<td><label   >" + post.updatedBy + "</label></td>" +
+                "<td><label   >" + post.updatedOn + "</label></td>" +
+                "<td>" +
+                "<button type='button' " +
+                "onclick='postUpdate(this);' " +
+                "class='btn btn-default' " +
+                "data-id='" + post.postId + "' " +
+                //"data-name='" + post.name + "' " +
+                //"data-gender='" + post.gender + "' " +
+                //"data-salary='" + post.salary + "' " +
+                ">" +
+                "<span class='glyphicon glyphicon-edit' /> Update" +
+                "</button> " +
+                " <button type='button' " +
+                "onclick='postDelete(this);'" +
+                "class='btn btn-default' " +
+                "data-id='" + post.postId + "'>" +
+                "<span class='glyphicon glyphicon-remove' />Delete" +
+                "</button>" +
+                "</td>" +
+                "</tr>";
+
+            return newRow;
+        }
+
+        function onAddPost(item) {
+            Post.postId++;
+            var options = {};
+            options.url = "/api/AddPost";
+            options.type = "POST";
+            var obj = Post;
+            obj.postTitle = $("#postTitle").val();
+            obj.postContent = $("#postContent").val();
+            //obj.gender = $("#gender").val();
+            //obj.salary = $("#salary").val();
+            console.log('in onAddPost');
+            console.dir(obj);
+            options.data = JSON.stringify(obj);
+            options.contentType = "application/json";
+            options.dataType = "html";
+
+            options.success = function (msg) {
+                getPostList();
+                $("#msg").html(msg);
+                $("#postTitle").val("");
+                $("#postContent").val("");
+            },
+                options.error = function () {
+                    $("#msg").html("Error while calling the Web API!");
+                };
+            $.ajax(options);
+        }
+
+        function postUpdate(item) {
+            var id = $(item).data("id");
+            var options = {};
+            options.url = "/api/UpdatePost/";
+            options.type = "PUT";
+
+            var obj = Post;
+            obj.postId = id;
+            obj.postTitle = $(".input-postTitle", $(item).parent().parent()).val();
+            obj.postContent = $(".input-postContent", $(item).parent().parent()).val();
+            //obj.gender = $(".input-gender", $(item).parent().parent()).val();
+            //obj.salary = $(".input-salary", $(item).parent().parent()).val();
+            console.log("postUpdate id: " + id);
+            console.dir(obj);
+            options.data = JSON.stringify(obj);
+            options.contentType = "application/json";
+            options.dataType = "html";
+            options.success = function (msg) {
+                getPostList();
+                $("#msg").html(msg);
+            };
+            options.error = function () {
+                $("#msg").html("Error while calling the Web API!");
+            };
+            $.ajax(options);
+        }
+
+        function postDelete(item) {
+            var id = $(item).data("id");
+            var options = {};
+            options.url = "/api/DeletePost/" + id;
+            options.type = "DELETE";
+            options.dataType = "html";
+            options.success = function (msg) {
+                console.log('msg= ' + msg);
+                $("#msg").html(msg);
+                getPostList();
+            };
+            options.error = function () {
+                $("#msg").html("Error while calling the Web API!");
+            };
+            $.ajax(options);
+        }
+
+        // Handle exceptions from AJAX calls
+        function handleException(request, message, error) {
+            var msg = "";
+            msg += "Code: " + request.status + "\n";
+            msg += "Text: " + request.statusText + "\n";
+            if (request.responseJSON != null) {
+                msg += "Message" + request.responseJSON.Message + "\n";
+            }
+
+            alert(msg);
+        }
+    </script>
+</head>
+<body>
+    <h3>Post Manager</h3>
+    <form>
+        <table id="postTable" class="table" style="border: 1px solid #999" cellpadding="1">
+            <thead>
+                <tr style="border: 1px solid #999" cellpadding="1">
+                    <td>Id </td>
+                    <td> Title </td>
+                    <td> Content </td>
+                    <td> CreatedBy </td>
+                    <td> CreatedOn </td>
+                    <td> UpdatedBy </td>
+                    <td> UpdatedOn </td>
+                    <td> </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input id="postTitle" type="text" /></td>
+                    <td><input id="postContent" type="text" /></td>
+                    <td><input type="button" id="insert" value="Insert" onclick='onAddPost(this)' /></td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+            </thead>
+        </table>
+        <br />
+        <div id="msg"></div>
+    </form>
+</body>
+</html>

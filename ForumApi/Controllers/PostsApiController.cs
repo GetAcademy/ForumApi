@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ForumApi.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Post")]
+    //[Route("api/post")]
     public class PostsApiController : Controller
     {
         private readonly IPostRepository _postRepository;
@@ -17,14 +17,21 @@ namespace ForumApi.Controllers
 
         }
 
-        [Route("~/api/GetPosts")]
+        [Route("~/api/posts")]
         [HttpGet]
-        public async Task<IEnumerable<Models.Post>> Index()
+        public async Task<IEnumerable<Models.Post>> GetPosts()
         {
             return await _postRepository.GetAllAsyn();
         }
 
-        [Route("~/api/AddPost")]
+        [Route("~/api/posts/{PostId}")]
+        [HttpGet]
+        public async Task<Models.Post> GetSinglePost(int postId)
+        {
+            return await _postRepository.GetAsync(postId);
+        }
+
+        [Route("~/api/Posts")]
         [HttpPost]
         public async Task<Models.Post> AddPost([FromBody] Models.Post post)
         {
@@ -33,20 +40,23 @@ namespace ForumApi.Controllers
             return post;
         }
 
-        [Route("~/api/UpdatePost")]
+        [Route("~/api/posts/{PostId}")]
         [HttpPut]
-        //public Post UpdatePost([FromBody] Post post)
-        //{
-        //  var updated = _postRepository.Update(post, post.PostId);
-        //  return updated;
-        //}
+        public async Task<Models.Post> ReplacePost([FromBody] Models.Post post)
+        {
+            var updated = await _postRepository.UpdateAsyn(post, post.PostId);
+            return updated;
+        }
+
+        [Route("~/api/posts/{PostId}")]
+        [HttpPatch]
         public async Task<Models.Post> UpdatePost([FromBody] Models.Post post)
         {
             var updated = await _postRepository.UpdateAsyn(post, post.PostId);
             return updated;
         }
 
-        [Route("~/api/DeletePost/{id}")]
+        [Route("~/api/posts/{PostId}")]
         [HttpDelete]
         public string Delete(int id)
         {

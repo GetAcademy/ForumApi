@@ -34,7 +34,7 @@
 
         function getPostList() {
             $.ajax({
-                url: '/api/GetPosts/',
+                url: '/api/posts/',
                 type: 'GET',
                 dataType: 'json',
                 success: function (posts) {
@@ -93,7 +93,7 @@
         function onAddPost(item) {
             Post.postId++;
             var options = {};
-            options.url = "/api/AddPost";
+            options.url = "/api/posts";
             options.type = "POST";
             var obj = Post;
             obj.postTitle = $("#postTitle").val();
@@ -119,7 +119,7 @@
         function postUpdate(item) {
             var id = $(item).data("id");
             var options = {};
-            options.url = "/api/UpdatePost/";
+            options.url = "/api/posts/" + id;
             options.type = "PUT";
 
             var obj = Post;
@@ -144,7 +144,7 @@
         function postDelete(item) {
             var id = $(item).data("id");
             var options = {};
-            options.url = "/api/DeletePost/" + id;
+            options.url = "/api/posts/" + id;
             options.type = "DELETE";
             options.dataType = "html";
             options.success = function (msg) {

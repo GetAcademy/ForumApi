@@ -14,10 +14,6 @@ namespace ForumApi.DataAccess
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-      builder.Entity<Answer>()
-          .HasOne(b => b.Post)
-          .WithMany(p => p.Answers)
-          .IsRequired();
       base.OnModelCreating(builder);
     }
 

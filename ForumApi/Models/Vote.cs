@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ForumApi.Models
 {
@@ -6,7 +7,9 @@ namespace ForumApi.Models
     {
         [Key]
         public int VoteId { get; set; }
-        [Range(0, 99999)]
+        public string VoteParent { get; set; } // answer | post
+        public int VoteParentId { get; set; } // id of answer or post
+        [Range(0, 999999)]
         public int VoteCount { get; set; }
     }
 }

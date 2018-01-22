@@ -1,0 +1,304 @@
+﻿body {
+    background: grey;
+    margin: 0;
+    padding: 0;
+    font-family: Arial;  
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+
+#header {
+    height: 5vh;
+    min-height: 40px;
+    background-color:#f3f3f3;
+    border: solid thin #c9c9c9;
+    border-bottom-style: hidden;
+    overflow: hidden;
+}
+#headerLogo {
+    background: #00bfff;
+    padding: 4px;
+    height: 10vh;
+    width: 200px;
+    border-right: solid thin #c9c9c9;
+    overflow: hidden;
+    float: left;
+}
+#icon {
+    height: 3vh;
+    width: 3vh;
+}
+    #header a {
+        height: 10vh;
+        float: left;
+        display: block;
+        color: black;
+        text-align: center;
+        padding: 10px;
+        text-decoration: none;
+        font-size: 17px;
+    }
+        #header a:hover {
+            background-color: lightgrey;
+            color: black;
+        }
+
+#header .active {
+    background-color: #BCCBD0;
+    opacity: 0.9;
+    color: black;
+}
+
+#nav-container {
+    float: right;
+    margin-left: 250px;
+}
+#userName {
+    float: right;
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 10px;
+    text-decoration: none;
+    margin-right: 53px;
+    font-size: 17px;
+}
+
+#leftColumn {
+    float: left;
+    width: 200px;
+    height: 95vh;
+    border: solid thin #c9c9c9;
+    background-color: #E1E6E9;
+    /*padding-top: 10px;*/
+}
+#makeCategoriesButton {
+    margin: 10px;
+    margin-left: 5vh;
+}
+
+    #leftColumn a {
+        clear: both;
+        float: left;
+        color: black;
+        padding: 5px;
+        padding-left: 40px;
+        width: 100%;
+        text-decoration: none;
+        font-size: 17px;
+    }
+
+        #leftColumn a:hover {
+            background-color: lightgrey;
+            opacity: 0.9;
+            color: black;
+        }
+
+    #leftColumn .active {
+        background-color: #BCCBD0;
+        opacity: 0.9;
+        color: black;
+    }
+
+#categories {
+    font-size: 15px;
+    padding: 6px;
+}
+
+#createCat {
+    margin-left: 25px;
+    margin-bottom: 30px;
+}
+
+#mainView {
+    height: 95vh;
+    padding-top: 10px;
+    border: solid thin #c9c9c9;
+    background-color: #ffffff;
+}
+
+#container {
+    max-height: 90vh;
+    padding-left: 10px;
+    overflow-y: auto;
+}
+
+.createPost {
+    margin-left: 250px;
+}
+label {
+    color: #08003D;
+    font-weight: bold;
+    display: block;
+    width: 150px;
+    float: left;
+}
+label:after {
+    content: ": "
+}
+
+input{
+    width : 200px;
+    margin: 0;
+
+    -webkit-box-sizing: border-box; /* For legacy WebKit based browsers */
+    -moz-box-sizing: border-box; /* For legacy (Firefox <29) Gecko based browsers */
+    box-sizing: border-box;
+}
+
+.allForms, h3 {
+    margin-left: 250px;
+}
+
+#postContainer {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    overflow: hidden;
+}
+#search-container {
+    float: right;
+    margin-right: 10px;
+}
+
+#container input[type=text] {
+    padding: 5px;
+    margin-top: 0.2%;
+    margin-bottom: 0.6%;
+    margin-left: 2px;
+    font-size: 17px;
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    max-height: 30px;
+}
+
+#createPost {
+    float: left;
+    margin-right: 10px;
+}
+
+#posts {
+    margin-left: 210px;
+}
+#upVotes {
+    float: right;
+    color: green;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+#upVotes2 {
+    color: green;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.panel-group {
+    padding-right: 10px;
+    overflow: hidden;
+}
+
+.panel-footer {
+    height: 40px;
+}
+
+.timeStamp {
+    float: right;
+}
+#report {
+    float: right;
+}
+
+    #report:hover {
+        background: red;
+        color: white;
+    }
+
+.editDelete {
+    float: right;
+}
+
+#edit {
+    margin-right: 10px;
+}
+
+#delete {
+    margin-right: 10px;
+}
+
+.button {
+    border-radius: 3px;
+    border: 1px solid #c9c9c9;
+    font-weight: bold;
+    color: #08003D;
+}
+
+.questionsPerson {
+    text-decoration: underline;
+    margin-bottom: 4px;
+}
+
+.answers {
+    margin: -15px;
+    margin-top: 20px;
+    padding: 16px;
+    background: #e1e6e9;
+    border-top: 1px solid #08003d;
+    border-bottom: 1px solid #08003d;
+}
+
+
+.answerButtons {
+    margin: -15px;
+    margin-right: 5px;
+    float: right;
+}
+
+.completedStatus {
+    color: #08003d;
+    font-size: larger;
+    text-align: center;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    border-radius: 10px;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 3px solid #0E5670;
+    color: #08003D;
+    width: 60%;
+    font-family: sans-serif;
+}
+
+.close {
+    color: black;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+

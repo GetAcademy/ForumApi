@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ForumApi.Models
@@ -9,8 +8,8 @@ namespace ForumApi.Models
         [Key]
         public int AnswerId { get; set; }
         public string AnswerContent { get; set; }
-
-
+        public string AnswerParent { get; set; }
+        public int AnswerParentId { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
         public string UpdatedBy { get; set; }

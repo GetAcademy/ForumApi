@@ -2,9 +2,9 @@
 
 namespace ForumApi.DataAccess
 {
-    public interface IAnswerRepository : IGenericRepository<Answer>
+    public interface IVoteRepository : IGenericRepository<Vote>
     {
         // If you need to customize your entity actions you can put here 
-        new Answer Get(string answerParent, int answerParentId, int answerId);
+        new Vote Get(string voteParent, int voteParentId, int voteId);
     }
 }

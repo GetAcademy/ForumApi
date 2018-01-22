@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>The Best Forum Ever</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="JavaScript.js"></script>
+    <link href="BootStrap.css" rel="stylesheet" />
+    <link href="StyleSheet.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="header">
+        <div id="headerLogo">
+            <img onclick="goHome()" id="logo" src="../Image/logo.svg" />
+
+        </div>
+        <div id="" nav-container>
+        </div>
+    </div>
+
+    <div id="leftColumn">
+        <div id="makeCategoriesButton"></div>
+    </div>
+
+    <div id="mainView">
+        <div id="container">
+            <div id="postContainer">
+                <div id="search-container">
+                    <form action="/action_page.php">
+                        <input type="text" placeholder="Search.." name="search">
+                    </form>
+                </div>
+                <button class="button" id="createPost">Lag ny post</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="ajax"></div>
+</body>
+</html>

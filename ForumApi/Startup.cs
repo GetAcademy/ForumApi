@@ -24,6 +24,10 @@ namespace ForumApi
                 options.UseInMemoryDatabase());
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<IAnswerRepository, AnswerRepository>();
+            services.AddTransient<IVoteRepository, VotesRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,21 +36,23 @@ namespace ForumApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+                //app.UseBrowserLink();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
+            //else
+            //{
+            //    app.UseExceptionHandler("/Home/Error");
+            //}
 
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller=Home}/{action=Index}/{id?}");
+            //});
             app.UseStaticFiles();
+            app.UseDefaultFiles();
+            app.UseMvc();
 
         }
     }

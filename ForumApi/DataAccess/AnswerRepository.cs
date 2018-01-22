@@ -10,15 +10,15 @@ namespace ForumApi.DataAccess
         {
         }
 
-        public Answer Get(int answerId)
+        public Answer Get(string answerParent, int answerParentId, int answerId)
         {
-            var query = GetAll().FirstOrDefault(p => p.AnswerId == answerId);
+            var query = GetAll().FirstOrDefault(p => p.AnswerId == answerId && p.AnswerParent == answerParent && p.AnswerParentId == answerParentId);
             return query;
         }
 
-        public async Task<Answer> GetSingleAsyn(int answerId)
+        public async Task<Answer> GetSingleAsyn(string answerParent, int answerParentId, int answerId)
         {
-            return await _context.Set<Answer>().FindAsync(answerId);
+            return await _context.Set<Answer>().FindAsync(answerId, answerParent, answerParentId);
         }
 
         public override Answer Update(Answer t, object key)

@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using ForumApi.Models;
+using ForumApi.Interfaces;
+using System.Collections.Generic;
 
-namespace ForumApi.DataAccess
+namespace ForumApi.Repositories
 {
     public class PostRepository : GenericRepository<Post>, IPostRepository   
     {
@@ -10,13 +12,12 @@ namespace ForumApi.DataAccess
         {
         }
 
-        public Post Get(int postId)
+        public async Task<IEnumerable<Post>> GetAllAsync(int categoryId)
         {
-            var query = GetAll().FirstOrDefault(b => b.PostId == postId);
-            return query;
+            return (await GetAllAsyn()).Where(p => p.PostParent == categoryId).ToList();
         }
 
-        public async Task<Post> GetSingleAsyn(int postId)
+        public async Task<Post> GetSingleAsyn(int postId, int postParent)
         {
             return await _context.Set<Post>().FindAsync(postId);
         }

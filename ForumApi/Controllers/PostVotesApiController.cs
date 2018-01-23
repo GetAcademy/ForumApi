@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using ForumApi.DataAccess;
+using ForumApi.Authorization;
+using ForumApi.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForumApi.Controllers
 {
     [Produces("application/json")]
-    //[Route("api/post/{PostId}/votes")]
+    [Route("api/categories/{CategoryId}/posts/{PostId}/votes")]
     public class PostVotesApiController : Controller
     {
         private readonly IVoteRepository _postVotesRepository;
@@ -16,38 +20,41 @@ namespace ForumApi.Controllers
             _postVotesRepository = postVotesRepository;
         }
 
-        [Route("~/api/posts/{PostId}/votes")]
         [HttpGet]
-        public async Task<IEnumerable<Models.Vote>> GetVotes()
+        public Task<IEnumerable<Models.Vote>> GetVotes(int postId)
         {
-            return await _postVotesRepository.GetAllAsyn();
+            
+            return _postVotesRepository.GetAllPostVotesAsync(postId);
         }
 
-        [Route("~/api/posts/{PostId}/votes/{VoteId}")]
+        [Route("{VoteId}")]
         [HttpGet]
         public async Task<Models.Vote> GetSinglePost(int voteId)
         {
             return await _postVotesRepository.GetAsync(voteId);
         }
 
-        [Route("~/api/posts/{PostId}/votes/")]
+        public string UserId => ((TfsoIdentity) User.Identity).TfsoUserId;
         [HttpPost]
-        public async Task<Models.Vote> AddVote([FromBody] Models.Vote vote)
+        public async Task<Models.Vote> AddVote(int postId, [FromBody] Models.Vote vote)
         {
+            //vote.UserId = UserId;
+            vote.VoteParent = postId;
             await _postVotesRepository.AddAsyn(vote);
             await _postVotesRepository.SaveAsync();
             return vote;
         }
 
-        [Route("~/api/posts/{PostId}/votes/{VoteId}")]
+        [Route("{VoteId}")]
         [HttpPut]
         public async Task<Models.Vote> ReplaceVote([FromBody] Models.Vote vote)
         {
+            //vote.UserId = UserId;
             var updated = await _postVotesRepository.UpdateAsyn(vote, vote.VoteId);
             return updated;
         }
 
-        [Route("~/api/posts/{PostId}/votes/{VoteId}")]
+        [Route("{VoteId}")]
         [HttpPatch]
         public async Task<Models.Vote> UpdatePost([FromBody] Models.Vote vote)
         {
@@ -55,7 +62,7 @@ namespace ForumApi.Controllers
             return updated;
         }
 
-        [Route("~/api/posts/{PostId}/votes/{VoteId}")]
+        [Route("{VoteId}")]
         [HttpDelete]
         public string Delete(int id)
         {

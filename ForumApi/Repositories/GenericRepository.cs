@@ -4,8 +4,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ForumApi.Interfaces;
 
-namespace ForumApi.DataAccess
+namespace ForumApi.Repositories
 {
     public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
     {

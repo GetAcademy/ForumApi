@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using ForumApi.Models;
+using ForumApi.Interfaces;
 
-namespace ForumApi.DataAccess
+namespace ForumApi.Repositories
 {
     public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
     {

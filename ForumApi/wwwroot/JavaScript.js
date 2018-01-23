@@ -52,7 +52,7 @@ function makeCategories() {
 
 function getCategoryList() {
     $.ajax({
-        url: '/api/categories/',
+        url: '/api/categories',
         type: 'GET',
         dataType: 'json',
         success: function (categories) {

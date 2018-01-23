@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ForumApi.DataAccess;
+using ForumApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForumApi.Controllers
 {
     [Produces("application/json")]
-    //[Route("api/category")]
+    [Route("api/categories")]
     public class CategoriesApiController : Controller
     {
         private readonly ICategoryRepository _categoryRepository;
@@ -17,21 +17,19 @@ namespace ForumApi.Controllers
 
         }
 
-        [Route("~/api/categories")]
         [HttpGet]
         public async Task<IEnumerable<Models.Category>> GetCategories()
         {
             return await _categoryRepository.GetAllAsyn();
         }
 
-        [Route("~/api/categories/{CategoryId}")]
+        [Route("{CategoryId}")]
         [HttpGet]
         public async Task<Models.Category> GetSingleCategory(int categoryId)
         {
             return await _categoryRepository.GetAsync(categoryId);
         }
 
-        [Route("~/api/categories")]
         [HttpPost]
         public async Task<Models.Category> AddCategory([FromBody] Models.Category category)
         {
@@ -40,7 +38,7 @@ namespace ForumApi.Controllers
             return category;
         }
 
-        [Route("~/api/categories/{CategoryId}")]
+        [Route("{CategoryId}")]
         [HttpPut]
         public async Task<Models.Category> ReplaceCategory([FromBody] Models.Category category)
         {
@@ -48,7 +46,7 @@ namespace ForumApi.Controllers
             return updated;
         }
 
-        [Route("~/api/categories/{CategoryId}")]
+        [Route("{CategoryId}")]
         [HttpPatch]
         public async Task<Models.Category> UpdateCategory([FromBody] Models.Category category)
         {
@@ -56,15 +54,13 @@ namespace ForumApi.Controllers
             return updated;
         }
 
-        [Route("~/api/categories/{CategoryId}")]
+        [Route("{CategoryId}")]
         [HttpDelete]
         public string Delete(int id)
         {
             _categoryRepository.Delete(_categoryRepository.Get(id));
             return "Category deleted successfully!";
         }
-
-
 
         protected override void Dispose(bool disposing)
         {

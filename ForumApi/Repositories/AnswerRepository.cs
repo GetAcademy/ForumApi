@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ForumApi.Models;
+using ForumApi.Interfaces;
 
-namespace ForumApi.DataAccess
+namespace ForumApi.Repositories
 {
     public class AnswerRepository : GenericRepository<Answer>, IAnswerRepository
     {
@@ -10,15 +12,14 @@ namespace ForumApi.DataAccess
         {
         }
 
-        public Answer Get(string answerParent, int answerParentId, int answerId)
+        public async Task<IEnumerable<Answer>> GetAllAsync(int postId)
         {
-            var query = GetAll().FirstOrDefault(p => p.AnswerId == answerId && p.AnswerParent == answerParent && p.AnswerParentId == answerParentId);
-            return query;
+            return (await GetAllAsyn()).Where(p => p.AnswerParent == postId).ToList();
         }
 
-        public async Task<Answer> GetSingleAsyn(string answerParent, int answerParentId, int answerId)
+        public async Task<Answer> GetSingleAsyn(int answerParent, int answerId)
         {
-            return await _context.Set<Answer>().FindAsync(answerId, answerParent, answerParentId);
+            return await _context.Set<Answer>().FindAsync(answerId, answerParent);
         }
 
         public override Answer Update(Answer t, object key)

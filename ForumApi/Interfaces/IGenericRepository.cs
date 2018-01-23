@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace ForumApi.DataAccess
+namespace ForumApi.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {

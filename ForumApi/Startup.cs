@@ -1,4 +1,7 @@
-﻿using ForumApi.DataAccess;
+﻿using ForumApi.Authorization;
+using ForumApi.Interfaces;
+using ForumApi.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +24,14 @@ namespace ForumApi
         {
             services.AddMvc();
             services.AddDbContext<DataContext>(options =>
-                options.UseInMemoryDatabase());
+            {
+                options.UseInMemoryDatabase();
+            });
+            services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = "Basic";
+            }).AddCustomAuthentication("Basic", "This is my lovely authentication scheme", o => { });
+            //services.AddAuthentication().AddScheme<AuthenticationSchemeOptions, AuthorizationHandler>("Basic", options => {});
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<IAnswerRepository, AnswerRepository>();
             services.AddTransient<IVoteRepository, VotesRepository>();
@@ -33,6 +43,7 @@ namespace ForumApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseAuthentication();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -53,7 +64,6 @@ namespace ForumApi
             app.UseStaticFiles();
             app.UseDefaultFiles();
             app.UseMvc();
-
         }
     }
 }

@@ -6,18 +6,21 @@ using System.Threading.Tasks;
 using ForumApi.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ForumApi.DataAccess
+namespace ForumApi.Repositories
 {
     public class DataContext :DbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options){}
 
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-      base.OnModelCreating(builder);
-    }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Answer>().HasKey(a => new {a.AnswerParent, a.AnswerId});
+            builder.Entity<Post>().HasKey(p => new { p.PostParent, p.PostId });
+            builder.Entity<Vote>().HasKey(p => new { p.VoteParent, p.VoteId });
+        }
 
-    public virtual void Save()
+        public virtual void Save()
     {
       base.SaveChanges();
     }
@@ -68,9 +71,7 @@ namespace ForumApi.DataAccess
     }
 
     public DbSet<Post> Post { get; set; }
-    public DbSet<PostDetail> PostDetail { get; set; }
     public DbSet<Answer> Answer { get; set; }
-    public DbSet<AnswerDetail> AnswerDetail { get; set; }
     public DbSet<Vote> Vote { get; set; }
     public DbSet<User> User { get; set; }
     public DbSet<Category> Category { get; set; }

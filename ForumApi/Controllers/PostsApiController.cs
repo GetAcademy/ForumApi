@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ForumApi.DataAccess;
+using ForumApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForumApi.Controllers
 {
     [Produces("application/json")]
-    //[Route("api/post")]
+    [Route("api/categories/{CategoryId}/posts")]
     public class PostsApiController : Controller
     {
         private readonly IPostRepository _postRepository;
@@ -17,30 +17,29 @@ namespace ForumApi.Controllers
 
         }
 
-        [Route("~/api/posts")]
         [HttpGet]
-        public async Task<IEnumerable<Models.Post>> GetPosts()
+        public async Task<IEnumerable<Models.Post>> GetPosts(int categoryId)
         {
-            return await _postRepository.GetAllAsyn();
+            return await _postRepository.GetAllAsync(categoryId);
         }
 
-        [Route("~/api/posts/{PostId}")]
+        [Route("{PostId}")]
         [HttpGet]
         public async Task<Models.Post> GetSinglePost(int postId)
         {
             return await _postRepository.GetAsync(postId);
         }
 
-        [Route("~/api/Posts")]
         [HttpPost]
-        public async Task<Models.Post> AddPost([FromBody] Models.Post post)
+        public async Task<Models.Post> AddPost(int categoryId, [FromBody] Models.Post post)
         {
+            post.PostParent = categoryId;
             await _postRepository.AddAsyn(post);
             await _postRepository.SaveAsync();
             return post;
         }
 
-        [Route("~/api/posts/{PostId}")]
+        [Route("{PostId}")]
         [HttpPut]
         public async Task<Models.Post> ReplacePost([FromBody] Models.Post post)
         {
@@ -48,7 +47,7 @@ namespace ForumApi.Controllers
             return updated;
         }
 
-        [Route("~/api/posts/{PostId}")]
+        [Route("{PostId}")]
         [HttpPatch]
         public async Task<Models.Post> UpdatePost([FromBody] Models.Post post)
         {
@@ -56,7 +55,7 @@ namespace ForumApi.Controllers
             return updated;
         }
 
-        [Route("~/api/posts/{PostId}")]
+        [Route("{PostId}")]
         [HttpDelete]
         public string Delete(int id)
         {

@@ -1,6 +1,6 @@
 ﻿using ForumApi.Models;
 
-namespace ForumApi.DataAccess
+namespace ForumApi.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {

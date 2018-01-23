@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ForumApi.DataAccess;
+using ForumApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForumApi.Controllers

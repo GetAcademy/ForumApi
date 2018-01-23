@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using ForumApi.DataAccess;
+using ForumApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForumApi.Controllers
 {
     [Produces("application/json")]
-    //[Route("api/answer")]
+    [Route("api/categories/{CategoryId}/posts/{postId}/answers")]
     public class AnswersApiController : Controller
     {
         private readonly IAnswerRepository _answerRepository;
@@ -14,33 +15,32 @@ namespace ForumApi.Controllers
         public AnswersApiController(IAnswerRepository answerRepository)
         {
             _answerRepository = answerRepository;
-
         }
-
-        [Route("~/api/posts/{PostId}/answers")]
+        
         [HttpGet]
-        public async Task<IEnumerable<Models.Answer>> GetAnswers()
+        public Task<IEnumerable<Models.Answer>> GetAnswers(int postId)
         {
-            return await _answerRepository.GetAllAsyn();
+            //Request.HttpContext
+            return _answerRepository.GetAllAsync(postId);
         }
 
-        [Route("~/api/posts/{PostId}/answers/{AnswerId}")]
+        [Route("{AnswerId}")]
         [HttpGet]
         public async Task<Models.Answer> GetSingleAnswer(int answerId)
         {
             return await _answerRepository.GetAsync(answerId);
         }
-
-        [Route("~/api/posts/{PostId}/answers")]
+        
         [HttpPost]
-        public async Task<Models.Answer> AddAnswer([FromBody] Models.Answer answer)
+        public async Task<Models.Answer> AddAnswer(int postId, [FromBody] Models.Answer answer)
         {
+            answer.AnswerParent = postId;
             await _answerRepository.AddAsyn(answer);
             await _answerRepository.SaveAsync();
             return answer;
         }
 
-        [Route("~/api/posts/{PostId}/answers/{AnswerId}")]
+        [Route("{AnswerId}")]
         [HttpPut]
         public async Task<Models.Answer> ReplaceAnswer([FromBody] Models.Answer answer)
         {
@@ -48,7 +48,8 @@ namespace ForumApi.Controllers
             return updated;
         }
 
-        [Route("~/api/posts/{PostId}/answers/{AnswerId}")]
+
+        [Route("{AnswerId}")]
         [HttpPatch]
         public async Task<Models.Answer> UpdateAnswer([FromBody] Models.Answer answer)
         {
@@ -56,7 +57,7 @@ namespace ForumApi.Controllers
             return updated;
         }
 
-        [Route("~/api/posts/{PostId}/answers/{AnswerId}")]
+        [Route("{AnswerId}")]
         [HttpDelete]
         public string Delete(int id)
         {

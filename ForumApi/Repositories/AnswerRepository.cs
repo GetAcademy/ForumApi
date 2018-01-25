@@ -12,14 +12,14 @@ namespace ForumApi.Repositories
         {
         }
 
-        public async Task<IEnumerable<Answer>> GetAllAsync(int postId)
+        public async Task<IEnumerable<Answer>> GetAllAsync(int postId, int categoryId)
         {
-            return (await GetAllAsyn()).Where(p => p.AnswerParent == postId).ToList();
+            return (await GetAllAsyn()).Where(p => p.CategoryId == categoryId && p.PostId == postId).ToList();
         }
 
-        public async Task<Answer> GetSingleAsyn(int answerParent, int answerId)
+        public async Task<Answer> GetSingleAsyn(int categoryId, int postId, int answerId)
         {
-            return await _context.Set<Answer>().FindAsync(answerId, answerParent);
+            return await _context.Set<Answer>().FindAsync(answerId, postId, categoryId);
         }
 
         public override Answer Update(Answer t, object key)

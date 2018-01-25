@@ -1,13 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ForumApi.Models
+﻿namespace ForumApi.Models
 {
     public class Vote
     {
+        public int CategoryId { get; set; }
         public int VoteId { get; set; }
-        [Required]
-        public int VoteParent { get; set; }
-        [Range(0, 999999)]
+        public int PostId { get; set; }
+        public int AnswerId { get; set; }
         public int VoteCount { get; set; }
+        public int VotedBy { get; set; }
     }
 }

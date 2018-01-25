@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ForumApi.Authorization;
 using ForumApi.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForumApi.Controllers
@@ -21,10 +18,10 @@ namespace ForumApi.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<Models.Vote>> GetVotes(int postId)
+        public Task<IEnumerable<Models.Vote>> GetVotes(int postId, int categoryId)
         {
             
-            return _postVotesRepository.GetAllPostVotesAsync(postId);
+            return _postVotesRepository.GetAllPostVotesAsync(postId, categoryId);
         }
 
         [Route("{VoteId}")]
@@ -35,11 +32,13 @@ namespace ForumApi.Controllers
         }
 
         public string UserId => ((TfsoIdentity) User.Identity).TfsoUserId;
+
         [HttpPost]
-        public async Task<Models.Vote> AddVote(int postId, [FromBody] Models.Vote vote)
+        public async Task<Models.Vote> AddVote(int categoryId, int postId, [FromBody] Models.Vote vote)
         {
-            //vote.UserId = UserId;
-            vote.VoteParent = postId;
+            //vote.UserId = userId;
+            vote.CategoryId = categoryId;
+            vote.PostId = postId;
             await _postVotesRepository.AddAsyn(vote);
             await _postVotesRepository.SaveAsync();
             return vote;

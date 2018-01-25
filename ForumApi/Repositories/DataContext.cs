@@ -15,16 +15,16 @@ namespace ForumApi.Repositories
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Answer>().HasKey(a => new {a.AnswerParent, a.AnswerId});
-            builder.Entity<Post>().HasKey(p => new { p.PostParent, p.PostId });
-            builder.Entity<Vote>().HasKey(p => new { p.VoteParent, p.VoteId });
+            builder.Entity<Answer>().HasKey(a => new { a.CategoryId, a.PostId, a.AnswerId });
+            builder.Entity<Post>().HasKey(p => new { p.CategoryId, p.PostId });
+            builder.Entity<Vote>().HasKey(v => new { v.CategoryId, v.PostId, v.AnswerId, v.VoteId /*v.VotedBy*/ });
         }
-
         public virtual void Save()
     {
       base.SaveChanges();
     }
-    public string UserProvider
+
+        public string UserProvider
     {
       get
       {

@@ -12,19 +12,20 @@ namespace ForumApi.Repositories
         {
         }
 
-        public async Task<IEnumerable<Vote>> GetAllPostVotesAsync(int postId)
+        public async Task<IEnumerable<Vote>> GetAllPostVotesAsync(int postId, int categoryId)
         {
-            return (await GetAllAsyn()).Where(p => p.VoteParent == postId).ToList();
+            return (await GetAllAsyn()).Where(p => p.PostId == postId && p.CategoryId == categoryId && p.AnswerId == 0).ToList();
         }
 
-        public Task<IEnumerable<Vote>> GetAllAnswerVotesAsync(int answerId)
+        //public async Task<IEnumerable<Vote>> GetAllAnswerVotesAsync(int postId, int categoryId)
+        //{
+        //    return await GetAll().Where(p => p.CategoryId == categoryId && p.PostId == postId && p.AnswerId != null).ToListAsync();
+        //}
+        public async Task<IEnumerable<Vote>> GetAllAnswerVotesAsync(int answerId, int postId, int categoryId)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<IEnumerable<Vote>> GetAllAnswerVotesAsync(int answerId, int postId)
-        {
-            return (await GetAllAsyn()).Where(a => a.VoteParent == answerId).ToList();
+            return (await GetAllAsyn())
+                .Where(p => p.CategoryId == categoryId && p.PostId == postId && p.AnswerId == answerId)
+                .ToList();
         }
 
         public async Task<Vote> GetSingleAsyn(int voteParent, int voteId)

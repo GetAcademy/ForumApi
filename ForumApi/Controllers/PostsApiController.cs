@@ -25,15 +25,16 @@ namespace ForumApi.Controllers
 
         [Route("{PostId}")]
         [HttpGet]
-        public async Task<Models.Post> GetSinglePost(int postId)
+        public async Task<Models.Post> GetSinglePost(int categoryId, int postId)
         {
-            return await _postRepository.GetAsync(postId);
+            return await _postRepository.GetSingleAsyn(postId, categoryId);
         }
+
 
         [HttpPost]
         public async Task<Models.Post> AddPost(int categoryId, [FromBody] Models.Post post)
         {
-            post.PostParent = categoryId;
+            post.CategoryId = categoryId;
             await _postRepository.AddAsyn(post);
             await _postRepository.SaveAsync();
             return post;
@@ -49,9 +50,9 @@ namespace ForumApi.Controllers
 
         [Route("{PostId}")]
         [HttpPatch]
-        public async Task<Models.Post> UpdatePost([FromBody] Models.Post post)
+        public async Task<Models.Post> UpdatePost(int categoryId, [FromBody] Models.Post post)
         {
-            var updated = await _postRepository.UpdateAsyn(post, post.PostId);
+            var updated = await _postRepository.UpdateAsync(categoryId, post, post.PostId);
             return updated;
         }
 

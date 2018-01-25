@@ -14,12 +14,12 @@ namespace ForumApi.Repositories
 
         public async Task<IEnumerable<Post>> GetAllAsync(int categoryId)
         {
-            return (await GetAllAsyn()).Where(p => p.PostParent == categoryId).ToList();
+            return (await GetAllAsyn()).Where(p => p.CategoryId == categoryId).ToList();
         }
 
-        public async Task<Post> GetSingleAsyn(int postId, int postParent)
+        public async Task<Post> GetSingleAsyn(int categoryId, int postId)
         {
-            return await _context.Set<Post>().FindAsync(postId);
+            return await _context.Set<Post>().FindAsync(postId, categoryId);
         }
 
         public override Post Update(Post t, object key)
@@ -42,6 +42,13 @@ namespace ForumApi.Repositories
                 t.CreatedOn = exist.CreatedOn;
             }
             return await base.UpdateAsyn(t, key);
+        }
+
+        public async Task<Post> UpdateAsync(int categoryId, Post post, int postId)
+        {
+            var updateThis = _context.Set<Post>().FindAsync(postId, post, categoryId);
+            //Kode for å oppdatere
+            return await updateThis;
         }
     }
 }

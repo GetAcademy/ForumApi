@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ForumApi.Controllers
 {
     [Produces("application/json")]
-    //[Route("api/user")]
+    [Route("api/user")]
     public class UsersApiController : Controller
     {
         private readonly IUserRepository _userRepository;
@@ -17,21 +17,19 @@ namespace ForumApi.Controllers
 
         }
 
-        [Route("~/api/posts/{PostId}/users")]
         [HttpGet]
         public async Task<IEnumerable<Models.User>> GetUsers()
         {
             return await _userRepository.GetAllAsyn();
         }
 
-        [Route("~/api/posts/{PostId}/users/{UserId}")]
+        [Route("{UserId}")]
         [HttpGet]
         public async Task<Models.User> GetSingleUser(int userId)
         {
             return await _userRepository.GetAsync(userId);
         }
 
-        [Route("~/api/posts/{PostId}/users")]
         [HttpPost]
         public async Task<Models.User> AddUser([FromBody] Models.User user)
         {
@@ -40,7 +38,7 @@ namespace ForumApi.Controllers
             return user;
         }
 
-        [Route("~/api/posts/{PostId}/users/{UserId}")]
+        [Route("{UserId}")]
         [HttpPut]
         public async Task<Models.User> ReplaceUser([FromBody] Models.User user)
         {
@@ -48,7 +46,7 @@ namespace ForumApi.Controllers
             return updated;
         }
 
-        [Route("~/api/posts/{PostId}/users/{UserId}")]
+        [Route("{UserId}")]
         [HttpPatch]
         public async Task<Models.User> UpdateUser([FromBody] Models.User user)
         {
@@ -56,15 +54,13 @@ namespace ForumApi.Controllers
             return updated;
         }
 
-        [Route("~/api/posts/{PostId}/users/{UserId}")]
+        [Route("{UserId}")]
         [HttpDelete]
         public string Delete(int id)
         {
             _userRepository.Delete(_userRepository.Get(id));
             return "User deleted successfully!";
         }
-
-
 
         protected override void Dispose(bool disposing)
         {

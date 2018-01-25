@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ForumApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -18,23 +17,23 @@ namespace ForumApi.Controllers
         }
         
         [HttpGet]
-        public Task<IEnumerable<Models.Answer>> GetAnswers(int postId)
+        public Task<IEnumerable<Models.Answer>> GetAnswers(int categoryId, int postId)
         {
-            //Request.HttpContext
-            return _answerRepository.GetAllAsync(postId);
+            return _answerRepository.GetAllAsync(postId, categoryId);
         }
 
         [Route("{AnswerId}")]
         [HttpGet]
-        public async Task<Models.Answer> GetSingleAnswer(int answerId)
+        public async Task<Models.Answer> GetSingleAnswer(int categoryId, int postId, int answerId)
         {
-            return await _answerRepository.GetAsync(answerId);
+            return await _answerRepository.GetSingleAsyn(answerId, postId, categoryId);
         }
         
         [HttpPost]
-        public async Task<Models.Answer> AddAnswer(int postId, [FromBody] Models.Answer answer)
+        public async Task<Models.Answer> AddAnswer(int postId, int categoryId, [FromBody] Models.Answer answer)
         {
-            answer.AnswerParent = postId;
+            answer.PostId = postId;
+            answer.CategoryId = categoryId;
             await _answerRepository.AddAsyn(answer);
             await _answerRepository.SaveAsync();
             return answer;
@@ -64,8 +63,6 @@ namespace ForumApi.Controllers
             _answerRepository.Delete(_answerRepository.Get(id));
             return "Answer deleted successfully!";
         }
-
-
 
         protected override void Dispose(bool disposing)
         {

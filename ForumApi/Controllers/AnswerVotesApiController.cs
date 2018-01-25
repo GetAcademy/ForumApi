@@ -17,9 +17,9 @@ namespace ForumApi.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<Models.Vote>> GetVotes(int answerId)
+        public Task<IEnumerable<Models.Vote>> GetVotes(int answerId, int postId, int categoryId)
         {
-            return _answerVotesRepository.GetAllAnswerVotesAsync(answerId);
+            return _answerVotesRepository.GetAllAnswerVotesAsync(answerId, postId, categoryId);
         }
 
         [Route("{VoteId}")]
@@ -30,10 +30,11 @@ namespace ForumApi.Controllers
         }
 
         [HttpPost]
-        public async Task<Models.Vote> AddVote(int answerId, [FromBody] Models.Vote vote)
+        public async Task<Models.Vote> AddVote(int categoryId,int answerId, int postId, [FromBody] Models.Vote vote)
         {
-
-            vote.VoteParent = answerId;
+            vote.CategoryId = categoryId;
+            vote.PostId = postId;
+            vote.AnswerId = answerId;
             await _answerVotesRepository.AddAsyn(vote);
             await _answerVotesRepository.SaveAsync();
             return vote;

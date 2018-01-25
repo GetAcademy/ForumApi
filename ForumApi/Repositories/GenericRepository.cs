@@ -24,7 +24,6 @@ namespace ForumApi.Repositories
 
         public virtual async Task<ICollection<T>> GetAllAsyn()
         {
-
             return await _context.Set<T>().ToListAsync();
         }
 
@@ -123,7 +122,6 @@ namespace ForumApi.Repositories
 
         public virtual void Save()
         {
-
             _context.SaveChanges();
         }
 

@@ -1,7 +1,6 @@
 ﻿using ForumApi.Authorization;
 using ForumApi.Interfaces;
 using ForumApi.Repositories;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -47,20 +46,7 @@ namespace ForumApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseBrowserLink();
             }
-            //else
-            //{
-            //    app.UseExceptionHandler("/Home/Error");
-            //}
-
-
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller=Home}/{action=Index}/{id?}");
-            //});
             app.UseStaticFiles();
             app.UseDefaultFiles();
             app.UseMvc();

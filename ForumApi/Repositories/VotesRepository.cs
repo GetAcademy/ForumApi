@@ -28,9 +28,17 @@ namespace ForumApi.Repositories
                 .ToList();
         }
 
-        public async Task<Vote> GetSingleAsyn(int voteParent, int voteId)
+        public async Task<IEnumerable<Vote>> GetSingleAnswerVoteAsync(int categoryId, int postId, int answerId, int voteId)
         {
-            return await _context.Set<Vote>().FindAsync(voteParent, voteId);
+            return (await GetAllAsyn())
+                .Where(p => p.CategoryId == categoryId && p.PostId == postId && p.AnswerId == answerId && p.VoteId == voteId)
+                .ToList();
+        }
+        public async Task<IEnumerable<Vote>> GetSinglePostVoteAsync(int categoryId, int postId, int answerId, int voteId)
+        {
+            return (await GetAllAsyn())
+                .Where(p => p.CategoryId == categoryId && p.PostId == postId && p.AnswerId == answerId && p.VoteId == voteId)
+                .ToList();
         }
 
         public override Vote Update(Vote t, object key)
@@ -50,6 +58,5 @@ namespace ForumApi.Repositories
             }
             return await base.UpdateAsyn(t, key);
         }
-
     }
 }

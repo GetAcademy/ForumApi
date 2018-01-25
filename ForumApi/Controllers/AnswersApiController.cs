@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ForumApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using ForumApi.Models;
 
 namespace ForumApi.Controllers
 {
@@ -17,20 +18,20 @@ namespace ForumApi.Controllers
         }
         
         [HttpGet]
-        public Task<IEnumerable<Models.Answer>> GetAnswers(int categoryId, int postId)
+        public Task<IEnumerable<Answer>> GetAnswers(int categoryId, int postId)
         {
             return _answerRepository.GetAllAsync(postId, categoryId);
         }
 
         [Route("{AnswerId}")]
         [HttpGet]
-        public async Task<Models.Answer> GetSingleAnswer(int categoryId, int postId, int answerId)
+        public async Task<Answer> GetSingleAnswer(int categoryId, int postId, int answerId)
         {
             return await _answerRepository.GetSingleAsyn(answerId, postId, categoryId);
         }
         
         [HttpPost]
-        public async Task<Models.Answer> AddAnswer(int postId, int categoryId, [FromBody] Models.Answer answer)
+        public async Task<Answer> AddAnswer(int postId, int categoryId, [FromBody] Answer answer)
         {
             answer.PostId = postId;
             answer.CategoryId = categoryId;
@@ -41,7 +42,7 @@ namespace ForumApi.Controllers
 
         [Route("{AnswerId}")]
         [HttpPut]
-        public async Task<Models.Answer> ReplaceAnswer([FromBody] Models.Answer answer)
+        public async Task<Answer> ReplaceAnswer([FromBody] Answer answer)
         {
             var updated = await _answerRepository.UpdateAsyn(answer, answer.AnswerId);
             return updated;
@@ -50,7 +51,7 @@ namespace ForumApi.Controllers
 
         [Route("{AnswerId}")]
         [HttpPatch]
-        public async Task<Models.Answer> UpdateAnswer([FromBody] Models.Answer answer)
+        public async Task<Answer> UpdateAnswer([FromBody] Answer answer)
         {
             var updated = await _answerRepository.UpdateAsyn(answer, answer.AnswerId);
             return updated;
@@ -58,10 +59,13 @@ namespace ForumApi.Controllers
 
         [Route("{AnswerId}")]
         [HttpDelete]
-        public string Delete(int id)
+        public string Delete(int categoryId, int postId, int answerId, [FromBody] Answer answer)
         {
-            _answerRepository.Delete(_answerRepository.Get(id));
-            return "Answer deleted successfully!";
+            answer.CategoryId = categoryId;
+            answer.PostId = postId;
+            answer.AnswerId = answerId;
+            _answerRepository.Delete(answer);
+            return "Vote deleted successfully!";
         }
 
         protected override void Dispose(bool disposing)

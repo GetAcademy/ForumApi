@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ForumApi.Interfaces;
+using ForumApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForumApi.Controllers
@@ -14,25 +15,24 @@ namespace ForumApi.Controllers
         public PostsApiController(IPostRepository postRepository)
         {
             _postRepository = postRepository;
-
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Models.Post>> GetPosts(int categoryId)
+        public async Task<IEnumerable<Post>> GetPosts(int categoryId)
         {
             return await _postRepository.GetAllAsync(categoryId);
         }
 
         [Route("{PostId}")]
         [HttpGet]
-        public async Task<Models.Post> GetSinglePost(int categoryId, int postId)
+        public async Task<Post> GetSinglePost(int categoryId, int postId)
         {
             return await _postRepository.GetSingleAsyn(postId, categoryId);
         }
 
 
         [HttpPost]
-        public async Task<Models.Post> AddPost(int categoryId, [FromBody] Models.Post post)
+        public async Task<Post> AddPost(int categoryId, [FromBody] Post post)
         {
             post.CategoryId = categoryId;
             await _postRepository.AddAsyn(post);
@@ -42,7 +42,7 @@ namespace ForumApi.Controllers
 
         [Route("{PostId}")]
         [HttpPut]
-        public async Task<Models.Post> ReplacePost([FromBody] Models.Post post)
+        public async Task<Post> ReplacePost([FromBody] Post post)
         {
             var updated = await _postRepository.UpdateAsyn(post, post.PostId);
             return updated;
@@ -50,7 +50,7 @@ namespace ForumApi.Controllers
 
         [Route("{PostId}")]
         [HttpPatch]
-        public async Task<Models.Post> UpdatePost(int categoryId, [FromBody] Models.Post post)
+        public async Task<Post> UpdatePost(int categoryId, [FromBody] Post post)
         {
             var updated = await _postRepository.UpdateAsync(categoryId, post, post.PostId);
             return updated;
@@ -58,10 +58,12 @@ namespace ForumApi.Controllers
 
         [Route("{PostId}")]
         [HttpDelete]
-        public string Delete(int id)
+        public string Delete(int categoryId, int postId, [FromBody] Post post)
         {
-            _postRepository.Delete(_postRepository.Get(id));
-            return "Post deleted successfully!";
+            post.CategoryId = categoryId;
+            post.PostId = postId;
+            _postRepository.Delete(post);
+            return "Vote deleted successfully!";
         }
 
         protected override void Dispose(bool disposing)

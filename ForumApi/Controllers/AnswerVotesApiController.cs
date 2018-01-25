@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ForumApi.Interfaces;
+using ForumApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForumApi.Controllers
@@ -17,20 +18,20 @@ namespace ForumApi.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<Models.Vote>> GetVotes(int answerId, int postId, int categoryId)
+        public Task<IEnumerable<Vote>> GetVotes(int answerId, int postId, int categoryId)
         {
             return _answerVotesRepository.GetAllAnswerVotesAsync(answerId, postId, categoryId);
         }
 
         [Route("{VoteId}")]
         [HttpGet]
-        public async Task<Models.Vote> GetSinglePost(int voteId)
+        public async Task<IEnumerable<Vote>> GetSingleAnswerVote(int categoryId, int postId, int answerId, int voteId)
         {
-            return await _answerVotesRepository.GetAsync(voteId);
+            return await _answerVotesRepository.GetSingleAnswerVoteAsync(categoryId, postId, answerId, voteId);
         }
 
         [HttpPost]
-        public async Task<Models.Vote> AddVote(int categoryId,int answerId, int postId, [FromBody] Models.Vote vote)
+        public async Task<Vote> AddVote(int categoryId,int answerId, int postId, [FromBody] Vote vote)
         {
             vote.CategoryId = categoryId;
             vote.PostId = postId;
@@ -42,7 +43,7 @@ namespace ForumApi.Controllers
 
         [Route("{VoteId}")]
         [HttpPut]
-        public async Task<Models.Vote> ReplaceVote([FromBody] Models.Vote vote)
+        public async Task<Vote> ReplaceVote([FromBody] Vote vote)
         {
             var updated = await _answerVotesRepository.UpdateAsyn(vote, vote.VoteId);
             return updated;
@@ -50,7 +51,7 @@ namespace ForumApi.Controllers
 
         [Route("{VoteId}")]
         [HttpPatch]
-        public async Task<Models.Vote> UpdatePost([FromBody] Models.Vote vote)
+        public async Task<Vote> UpdatePost([FromBody] Vote vote)
         {
             var updated = await _answerVotesRepository.UpdateAsyn(vote, vote.VoteId);
             return updated;
@@ -58,9 +59,13 @@ namespace ForumApi.Controllers
 
         [Route("{VoteId}")]
         [HttpDelete]
-        public string Delete(int id)
+        public string Delete(int categoryId, int postId, int answerId, int voteId, [FromBody] Vote vote)
         {
-            _answerVotesRepository.Delete(_answerVotesRepository.Get(id));
+            vote.CategoryId = categoryId;
+            vote.PostId = postId;
+            vote.AnswerId = answerId;
+            vote.VoteId = voteId;
+            _answerVotesRepository.Delete(vote);
             return "Vote deleted successfully!";
         }
 

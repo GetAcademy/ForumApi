@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ForumApi.Authorization;
 using ForumApi.Interfaces;
 using ForumApi.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,25 +18,24 @@ namespace ForumApi.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<Vote>> GetVotes(int postId, int categoryId)
+        public Task<IEnumerable<Vote>> GetVotes(int categoryId, int postId)
         {
             
-            return _postVotesRepository.GetAllPostVotesAsync(postId, categoryId);
+            return _postVotesRepository.GetAllPostVotesAsync(categoryId, postId);
         }
 
         [Route("{VoteId}")]
         [HttpGet]
         public async Task<IEnumerable<Vote>> GetSinglePostVote(int categoryId, int postId, int answerId, int voteId)
         {
-            return await _postVotesRepository.GetSinglePostVoteAsync(categoryId, postId, answerId, voteId);
+            return await _postVotesRepository.GetSingleAsync(categoryId, postId, answerId, voteId);
         }
 
-        public string UserId => ((TfsoIdentity) User.Identity).TfsoUserId;
+        //public string UserId => ((TfsoIdentity) User.Identity).TfsoUserId;
 
         [HttpPost]
         public async Task<Vote> AddVote(int categoryId, int postId, [FromBody] Vote vote)
         {
-            //vote.UserId = userId;
             vote.CategoryId = categoryId;
             vote.PostId = postId;
             await _postVotesRepository.AddAsyn(vote);
@@ -47,10 +45,13 @@ namespace ForumApi.Controllers
 
         [Route("{VoteId}")]
         [HttpPut]
-        public async Task<Vote> ReplaceVote([FromBody] Vote vote)
+        public async Task<Vote> ReplaceVote(int categoryId, int postId, int answerId, int voteId, [FromBody] Vote vote)
         {
-            //vote.UserId = UserId;
-            var updated = await _postVotesRepository.UpdateAsyn(vote, vote.VoteId);
+            vote.CategoryId = categoryId;
+            vote.PostId = postId;
+            vote.AnswerId = answerId;
+            vote.VoteId = voteId;
+            var updated = await _postVotesRepository.UpdateAsyn(vote);
             return updated;
         }
 
@@ -58,7 +59,7 @@ namespace ForumApi.Controllers
         [HttpPatch]
         public async Task<Vote> UpdatePost([FromBody] Vote vote)
         {
-            var updated = await _postVotesRepository.UpdateAsyn(vote, vote.VoteId);
+            var updated = await _postVotesRepository.UpdateAsyn(vote);
             return updated;
         }
 

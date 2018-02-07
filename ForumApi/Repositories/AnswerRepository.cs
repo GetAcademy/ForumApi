@@ -12,14 +12,14 @@ namespace ForumApi.Repositories
         {
         }
 
-        public async Task<IEnumerable<Answer>> GetAllAsync(int postId, int categoryId)
+        public async Task<IEnumerable<Answer>> GetAllAsync(int categoryId, int postId)
         {
             return (await GetAllAsyn()).Where(p => p.CategoryId == categoryId && p.PostId == postId).ToList();
         }
 
         public async Task<Answer> GetSingleAsyn(int categoryId, int postId, int answerId)
         {
-            return await _context.Set<Answer>().FindAsync(answerId, postId, categoryId);
+            return await _context.Set<Answer>().FindAsync(categoryId, postId, answerId);
         }
 
         public override Answer Update(Answer t, object key)
@@ -33,15 +33,9 @@ namespace ForumApi.Repositories
             return base.Update(t, key);
         }
 
-        public async override Task<Answer> UpdateAsyn(Answer t, object key)
+        protected override async Task<Answer> Find(Answer t)
         {
-            Answer exist = await _context.Set<Answer>().FindAsync(key);
-            if (exist != null)
-            {
-                t.CreatedBy = exist.CreatedBy;
-                t.CreatedOn = exist.CreatedOn;
-            }
-            return await base.UpdateAsyn(t, key);
+            return await GetSingleAsyn(t.CategoryId, t.PostId, t.AnswerId);
         }
     }
 }

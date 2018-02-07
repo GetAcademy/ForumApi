@@ -29,6 +29,6 @@ namespace ForumApi.Interfaces
         void Save();
         Task<int> SaveAsync();
         T Update(T t, object key);
-        Task<T> UpdateAsyn(T t, object key);
+        Task<T> UpdateAsyn(T t);
     }
 }

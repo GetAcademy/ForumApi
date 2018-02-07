@@ -97,11 +97,11 @@ namespace ForumApi.Repositories
             return exist;
         }
 
-        public virtual async Task<T> UpdateAsyn(T t, object key)
+        public virtual async Task<T> UpdateAsyn(T t)
         {
             if (t == null)
                 return null;
-            T exist = await _context.Set<T>().FindAsync(key);
+            var exist = await Find(t);
             if (exist != null)
             {
                 _context.Entry(exist).CurrentValues.SetValues(t);
@@ -109,6 +109,10 @@ namespace ForumApi.Repositories
             }
             return exist;
         }
+
+        protected abstract Task<T> Find(T t);
+
+
 
         public int Count()
         {
@@ -148,22 +152,22 @@ namespace ForumApi.Repositories
             foreach (Expression<Func<T, object>> includeProperty in includeProperties)
             {
 
-                queryable = queryable.Include<T, object>(includeProperty);
+                queryable = queryable.Include(includeProperty);
             }
 
             return queryable;
         }
 
-        private bool _disposed = false;
+        private bool _disposed;
         protected virtual void Dispose(bool disposing)
         {
-            if (!this._disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _context.Dispose();
                 }
-                this._disposed = true;
+                _disposed = true;
             }
         }
 

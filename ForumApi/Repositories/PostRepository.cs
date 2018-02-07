@@ -33,22 +33,15 @@ namespace ForumApi.Repositories
             return base.Update(t, key);
         }
 
-        public async override Task<Post> UpdateAsyn(Post t, object key)
+        //public async Task<Post> UpdateAsync(int categoryId, Post post, int postId)
+        //{
+        //    var updateThis = _context.Set<Post>().FindAsync(postId, post, categoryId);
+        //    //Kode for å oppdatere
+        //    return await updateThis;
+        //}
+        protected override async Task<Post> Find(Post t)
         {
-            Post exist = await _context.Set<Post>().FindAsync(key);
-            if (exist != null)
-            {
-                t.CreatedBy = exist.CreatedBy;
-                t.CreatedOn = exist.CreatedOn;
-            }
-            return await base.UpdateAsyn(t, key);
-        }
-
-        public async Task<Post> UpdateAsync(int categoryId, Post post, int postId)
-        {
-            var updateThis = _context.Set<Post>().FindAsync(postId, post, categoryId);
-            //Kode for å oppdatere
-            return await updateThis;
+            return await GetSingleAsyn(t.CategoryId, t.PostId);
         }
     }
 }

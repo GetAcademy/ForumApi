@@ -18,7 +18,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Post>> GetPosts(int categoryId)
+        public async Task<IEnumerable<Post>> GetPosts([FromRoute] int categoryId)
         {
             return await _postRepository.GetAllAsync(categoryId);
         }
@@ -27,7 +27,7 @@ namespace ForumApi.Controllers
         [HttpGet]
         public async Task<Post> GetSinglePost(int categoryId, int postId)
         {
-            return await _postRepository.GetSingleAsyn(postId, categoryId);
+            return await _postRepository.GetSingleAsyn(categoryId, postId);
         }
 
 
@@ -42,9 +42,11 @@ namespace ForumApi.Controllers
 
         [Route("{PostId}")]
         [HttpPut]
-        public async Task<Post> ReplacePost([FromBody] Post post)
+        public async Task<Post> ReplacePost(int categoryId, int postId, [FromBody] Post post)
         {
-            var updated = await _postRepository.UpdateAsyn(post, post.PostId);
+            post.CategoryId = categoryId;
+            post.PostId = postId;
+            var updated = await _postRepository.UpdateAsyn(post);
             return updated;
         }
 
@@ -52,7 +54,7 @@ namespace ForumApi.Controllers
         [HttpPatch]
         public async Task<Post> UpdatePost(int categoryId, [FromBody] Post post)
         {
-            var updated = await _postRepository.UpdateAsync(categoryId, post, post.PostId);
+            var updated = await _postRepository.UpdateAsyn(post);
             return updated;
         }
 
@@ -63,7 +65,7 @@ namespace ForumApi.Controllers
             post.CategoryId = categoryId;
             post.PostId = postId;
             _postRepository.Delete(post);
-            return "Vote deleted successfully!";
+            return "Post deleted successfully!";
         }
 
         protected override void Dispose(bool disposing)

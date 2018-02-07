@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ForumApi.Interfaces;
+using ForumApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForumApi.Controllers
@@ -40,9 +41,10 @@ namespace ForumApi.Controllers
 
         [Route("{CategoryId}")]
         [HttpPut]
-        public async Task<Models.Category> ReplaceCategory([FromBody] Models.Category category)
+        public async Task<Models.Category> ReplaceCategory(int categoryId, [FromBody] Models.Category category)
         {
-            var updated = await _categoryRepository.UpdateAsyn(category, category.CategoryId);
+            category.CategoryId = categoryId;
+            var updated = await _categoryRepository.UpdateAsyn(category);
             return updated;
         }
 
@@ -50,15 +52,16 @@ namespace ForumApi.Controllers
         [HttpPatch]
         public async Task<Models.Category> UpdateCategory([FromBody] Models.Category category)
         {
-            var updated = await _categoryRepository.UpdateAsyn(category, category.CategoryId);
+            var updated = await _categoryRepository.UpdateAsyn(category);
             return updated;
         }
 
         [Route("{CategoryId}")]
         [HttpDelete]
-        public string Delete(int id)
+        public string Delete(int categoryId, [FromBody] Category category)
         {
-            _categoryRepository.Delete(_categoryRepository.Get(id));
+            category.CategoryId = categoryId;
+            _categoryRepository.Delete(category);
             return "Category deleted successfully!";
         }
 

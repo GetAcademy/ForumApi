@@ -18,23 +18,23 @@ namespace ForumApi.Controllers
         }
         
         [HttpGet]
-        public Task<IEnumerable<Answer>> GetAnswers(int categoryId, int postId)
+        public Task<IEnumerable<Answer>> GetAnswers([FromRoute] int categoryId, int postId)
         {
-            return _answerRepository.GetAllAsync(postId, categoryId);
+            return _answerRepository.GetAllAsync(categoryId, postId);
         }
 
         [Route("{AnswerId}")]
         [HttpGet]
-        public async Task<Answer> GetSingleAnswer(int categoryId, int postId, int answerId)
+        public async Task<Answer> GetSingleAnswer([FromRoute] int categoryId, int postId, int answerId)
         {
-            return await _answerRepository.GetSingleAsyn(answerId, postId, categoryId);
+            return await _answerRepository.GetSingleAsyn(categoryId, postId, answerId);
         }
         
         [HttpPost]
-        public async Task<Answer> AddAnswer(int postId, int categoryId, [FromBody] Answer answer)
+        public async Task<Answer> AddAnswer(int categoryId, int postId, [FromBody] Answer answer)
         {
-            answer.PostId = postId;
             answer.CategoryId = categoryId;
+            answer.PostId = postId;
             await _answerRepository.AddAsyn(answer);
             await _answerRepository.SaveAsync();
             return answer;
@@ -42,20 +42,23 @@ namespace ForumApi.Controllers
 
         [Route("{AnswerId}")]
         [HttpPut]
-        public async Task<Answer> ReplaceAnswer([FromBody] Answer answer)
+        public async Task<Answer> ReplaceAnswer(int categoryId, int postId, int answerId, [FromBody] Answer answer)
         {
-            var updated = await _answerRepository.UpdateAsyn(answer, answer.AnswerId);
+            answer.CategoryId = categoryId;
+            answer.PostId = postId;
+            answer.AnswerId = answerId;
+            
+            var updated = await _answerRepository.UpdateAsyn(answer);
             return updated;
         }
 
-
-        [Route("{AnswerId}")]
-        [HttpPatch]
-        public async Task<Answer> UpdateAnswer([FromBody] Answer answer)
-        {
-            var updated = await _answerRepository.UpdateAsyn(answer, answer.AnswerId);
-            return updated;
-        }
+        //[Route("{AnswerId}")]
+        //[HttpPatch]
+        //public async Task<Answer> UpdateAnswer([FromBody] Answer answer)
+        //{
+        //    var updated = await _answerRepository.UpdateAsyn(answer);
+        //    return updated;
+        //}
 
         [Route("{AnswerId}")]
         [HttpDelete]
@@ -65,7 +68,7 @@ namespace ForumApi.Controllers
             answer.PostId = postId;
             answer.AnswerId = answerId;
             _answerRepository.Delete(answer);
-            return "Vote deleted successfully!";
+            return "Answer deleted successfully!";
         }
 
         protected override void Dispose(bool disposing)

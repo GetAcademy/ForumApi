@@ -16,6 +16,11 @@
 
         </div>
         <div id="" nav-container>
+            <a class="category" onclick="setActive(this), modalOpen()">Rules</a>
+            <a class="category" onclick="setActive(this)" href="#contact/">Contact</a>
+            <a class="category" onclick="setActive(this)" href="#faq/">FAQ</a>
+            <a class="category" onclick="setActive(this)" href="#faq/">Bug report</a>
+            <div id="userName"> Ola Nordmann  </div>
         </div>
     </div>
 
@@ -35,7 +40,16 @@
             </div>
         </div>
     </div>
+    
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span><br/>
+        <div id="modalContent">
+            <h2>Regler</h2><br/>
+            <p>Ved å bruke dette forumet aksepterer du at Truls og Dae er best</p>
+        </div>
+    </div>
+</div>
 
-    <div id="ajax"></div>
 </body>
 </html>

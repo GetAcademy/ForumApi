@@ -21,23 +21,11 @@ namespace ForumApi.Repositories
         {
             return await _context.Set<Category>().FindAsync(categoryId);
         }
-
-        public override Category Update(Category t, object key)
+        
+        protected override async Task<Category> Find(Category t)
         {
-            Category exist = _context.Set<Category>().Find(key);
-            if (exist != null)
-            {
-            }
-            return base.Update(t, key);
+            return await GetSingleAsyn(t.CategoryId);
         }
 
-        public async override Task<Category> UpdateAsyn(Category t, object key)
-        {
-            Category exist = await _context.Set<Category>().FindAsync(key);
-            if (exist != null)
-            {
-            }
-            return await base.UpdateAsyn(t, key);
-        }
     }
 }

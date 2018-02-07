@@ -23,9 +23,7 @@ namespace ForumApi
         {
             services.AddMvc();
             services.AddDbContext<DataContext>(options =>
-            {
-                options.UseInMemoryDatabase();
-            });
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAuthentication(o =>
             {
                 o.DefaultScheme = "Basic";

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ForumApi.Models;
 using ForumApi.Interfaces;
@@ -31,13 +32,17 @@ namespace ForumApi.Repositories
                 return base.Update(t, key);
             }
 
-            public async override Task<User> UpdateAsyn(User t, object key)
-            {
-                User exist = await _context.Set<User>().FindAsync(key);
-                if (exist != null)
-                {
-                }
-                return await base.UpdateAsyn(t, key);
-            }
+        //public async override Task<User> UpdateAsyn(User t, object key)
+        //{
+        //    User exist = await _context.Set<User>().FindAsync(key);
+        //    if (exist != null)
+        //    {
+        //    }
+        //    return await base.UpdateAsyn(t, key);
+        //}
+        protected override async Task<User> Find(User t)
+        {
+            return await GetSingleAsyn(t.UserId);
         }
+    }
     }

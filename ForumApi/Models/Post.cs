@@ -1,10 +1,11 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ForumApi.Models
 {
     public class Post : IAuditable
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PostId { get; set; }
         public int CategoryId { get; set; }
         public string PostTitle { get; set; }

@@ -11,6 +11,6 @@ namespace ForumApi.Interfaces
 
         Task<IEnumerable<Post>> GetAllAsync(int categoryId);
         Task<Post> GetSingleAsyn(int postId, int categoryId);
-        Task<Post> UpdateAsync(int categoryId, Post post, int postPostId);
+        //Task<Post> UpdateAsync(int categoryId, Post post, int postPostId);
     }
 }

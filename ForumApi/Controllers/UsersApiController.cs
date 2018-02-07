@@ -42,7 +42,7 @@ namespace ForumApi.Controllers
         [HttpPut]
         public async Task<Models.User> ReplaceUser([FromBody] Models.User user)
         {
-            var updated = await _userRepository.UpdateAsyn(user, user.UserId);
+            var updated = await _userRepository.UpdateAsyn(user);
             return updated;
         }
 
@@ -50,7 +50,7 @@ namespace ForumApi.Controllers
         [HttpPatch]
         public async Task<Models.User> UpdateUser([FromBody] Models.User user)
         {
-            var updated = await _userRepository.UpdateAsyn(user, user.UserId);
+            var updated = await _userRepository.UpdateAsyn(user);
             return updated;
         }
 

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ForumApi.Models;
 using ForumApi.Interfaces;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Repositories
 {
@@ -17,46 +18,35 @@ namespace ForumApi.Repositories
             return (await GetAllAsyn()).Where(p => p.PostId == postId && p.CategoryId == categoryId && p.AnswerId == 0).ToList();
         }
 
-        //public async Task<IEnumerable<Vote>> GetAllAnswerVotesAsync(int postId, int categoryId)
-        //{
-        //    return await GetAll().Where(p => p.CategoryId == categoryId && p.PostId == postId && p.AnswerId != null).ToListAsync();
-        //}
         public async Task<IEnumerable<Vote>> GetAllAnswerVotesAsync(int answerId, int postId, int categoryId)
         {
             return (await GetAllAsyn())
                 .Where(p => p.CategoryId == categoryId && p.PostId == postId && p.AnswerId == answerId)
                 .ToList();
         }
+        public async Task<IEnumerable<Vote>> GetAllVotesAsync(int answerId, int postId, int categoryId)
+        {
+            return (await GetAllAsyn())
+                .Where(p => p.CategoryId == categoryId && p.PostId == postId && p.AnswerId == answerId)
+                .ToList();
+        }
 
-        public async Task<IEnumerable<Vote>> GetSingleAnswerVoteAsync(int categoryId, int postId, int answerId, int voteId)
+        public async Task<IEnumerable<Vote>> GetSingleAsync(int categoryId, int postId, int answerId, int voteId)
         {
             return (await GetAllAsyn())
                 .Where(p => p.CategoryId == categoryId && p.PostId == postId && p.AnswerId == answerId && p.VoteId == voteId)
                 .ToList();
         }
-        public async Task<IEnumerable<Vote>> GetSinglePostVoteAsync(int categoryId, int postId, int answerId, int voteId)
+
+        public async Task<Vote> GetSingleAsyncs(int categoryId, int postId, int answerId, int voteId)
         {
-            return (await GetAllAsyn())
-                .Where(p => p.CategoryId == categoryId && p.PostId == postId && p.AnswerId == answerId && p.VoteId == voteId)
-                .ToList();
+            return await _context.Set<Vote>().SingleOrDefaultAsync(v => v.AnswerId == answerId && 
+            v.PostId == postId && v.CategoryId == categoryId && v.VoteId == voteId);
         }
 
-        public override Vote Update(Vote t, object key)
+        protected override async Task<Vote> Find(Vote t)
         {
-            Vote exist = _context.Set<Vote>().Find(key);
-            if (exist != null)
-            {
-            }
-            return base.Update(t, key);
-        }
-
-        public async override Task<Vote> UpdateAsyn(Vote t, object key)
-        {
-            Vote exist = await _context.Set<Vote>().FindAsync(key);
-            if (exist != null)
-            {
-            }
-            return await base.UpdateAsyn(t, key);
+            return await GetSingleAsyncs(t.CategoryId, t.PostId, t.AnswerId, t.VoteId);
         }
     }
 }
